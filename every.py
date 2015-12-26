@@ -16,6 +16,8 @@ if arg_length >= 3:
     interval = int(interval[0:index - 1])
     if unit == "m":
         interval *= 60
+    elif unit == "h":
+        interval *= 3600
     elif unit == "d":
         interval *= 86400
     process = sys.argv[2]
