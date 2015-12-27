@@ -1,28 +1,25 @@
 import sys
-from subprocess import call
 from time import sleep
+from subprocess import call
 
-arg_length = len(sys.argv)
-
-if arg_length >= 3:
+if len(sys.argv) >= 3:
     interval = sys.argv[1]
-    unit = "s"
-    index = 0
-    for c in interval:
-        index += 1
-        if not c.isdigit():
-            unit = c
+    for i in range(len(interval)):
+        unit = interval[i]
+        if unit.isalpha():
+            if unit == "m":
+                unit = 60
+            elif unit == "h":
+                unit = 3600
+            elif unit == "d":
+                unit = 86400
+            else:
+                unit = 1
+            interval = float(interval[:i]) * unit
             break
-    interval = int(interval[0:index - 1])
-    if unit == "m":
-        interval *= 60
-    elif unit == "h":
-        interval *= 3600
-    elif unit == "d":
-        interval *= 86400
-    process = sys.argv[2]
-    for i in range(3, arg_length):
-        process += " " + sys.argv[i]
+    if type(interval) is str:
+        interval = float(interval)
+    process = " ".join(sys.argv[2:])
     while True:
         sleep(interval)
-        call(process, shell = True)        
+        call(process, shell = True)
