@@ -3,12 +3,12 @@ import subprocess
 from time import sleep
 
 parser = ArgumentParser("every")
-parser.add_argument("-a", action = "store_true")
+parser.add_argument("-a", "--async", action = "store_true")
 parser.add_argument("interval")
 parser.add_argument("command", nargs = "+")
 args = parser.parse_args()
 
-call = subprocess.Popen if args.a else subprocess.call
+call = subprocess.Popen if args.async else subprocess.call
 interval = args.interval
 for i in range(len(interval)):
     unit = interval[i]
