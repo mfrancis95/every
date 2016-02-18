@@ -6,6 +6,7 @@ parser = ArgumentParser("every")
 parser.add_argument("-a", "--async", action = "store_true")
 parser.add_argument("interval")
 parser.add_argument("-s", "--start")
+parser.add_argument("-t", "--times", default = -1, type = int)
 parser.add_argument("command", nargs = "+")
 args = parser.parse_args()
 
@@ -20,6 +21,7 @@ call = subprocess.Popen if args.async else subprocess.call
 interval = args.interval
 interval = float(interval[:-1]) * units[interval[-1]]
 start = args.start
+times = args.times
 command = " ".join(args.command)
 
 if start:
@@ -30,6 +32,8 @@ if start:
     if start > 0:
         time.sleep(start)
 
-while True:
+while times != 0:
     time.sleep(interval)
     call(command, shell = True)
+    if times > 0:
+        times -= 1
