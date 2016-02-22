@@ -11,15 +11,14 @@ parser.add_argument("command", nargs = "+")
 args = parser.parse_args()
 
 units = {
-    "s": 1,
     "m": 60,
     "h": 3600,
     "d": 86400
 }
 
 call = subprocess.Popen if args.async else subprocess.call
-interval = args.interval
-interval = float(interval[:-1]) * units[interval[-1]]
+interval = args.interval.strip()
+interval = float(interval[:-1]) * units.get(interval[-1], 1)
 start = args.start
 times = args.times
 command = " ".join(args.command)
