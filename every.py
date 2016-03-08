@@ -11,11 +11,7 @@ parser.add_argument("-t", "--times", default = -1, type = int)
 parser.add_argument("command", nargs = "+")
 args = parser.parse_args()
 
-units = {
-    "m": 60,
-    "h": 3600,
-    "d": 86400
-}
+units = {"m": 60, "h": 3600, "d": 86400}
 
 call = lambda: (subprocess.Popen if args.async else subprocess.call)(" ".join(args.command), shell = True)
 delay = args.delay.strip()
@@ -23,9 +19,13 @@ delay = float(delay[:-1]) * units.get(delay[-1], 1)
 start = args.start
 
 if start:
-    now = time.localtime()
-    now = now[3] * 3600 + now[4] * 60 + now[5]
-    start = time.strptime(start, "%H:%M:%S")
-    start = start[3] * 3600 + start[4] * 60 + start[5] - now
+    try:
+        start = time.strptime(start, "%H:%M:%S")
+        now = time.localtime()
+        now = now[3] * 3600 + now[4] * 60 + now[5]
+        start = start[3] * 3600 + start[4] * 60 + start[5] - now
+    except ValueError:
+        start = start.strip()
+        start = float(start[:-1]) * units.get(start[-1], 1)
 
 Interval(delay, call, start, args.times)
